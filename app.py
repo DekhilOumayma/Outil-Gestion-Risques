@@ -23,65 +23,129 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        color: #1E293B;
-        margin-bottom: 0.2rem;
+        background: linear-gradient(90deg, #2563EB, #06B6D4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.03em;
     }
+
     .sub-header {
         font-size: 1rem;
         color: #64748B;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.4rem;
+        font-weight: 400;
     }
+
     .ai-box {
-        background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-        border: 1px solid #7DD3FC;
-        border-radius: 10px;
-        padding: 16px;
+        background: linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0.08),
+            rgba(6, 182, 212, 0.08)
+        );
+        border: 1px solid rgba(59, 130, 246, 0.20);
+        border-radius: 16px;
+        padding: 18px;
         margin-bottom: 15px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
     }
+
     .action-card {
-        background: #F8FAFC;
-        border: 1px solid #CBD5E1;
-        border-radius: 8px;
-        padding: 16px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 18px;
         margin-top: 10px;
         margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        transition: all 0.25s ease;
     }
+
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
+    }
+
     .export-box {
-        background: #F8FAFC;
+        background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 16px;
+        border-radius: 16px;
+        padding: 18px;
         margin-top: 15px;
         margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        transition: all 0.25s ease;
     }
+
+    .export-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
+    }
+
     .badge-ai {
-        background-color: #0284C7;
+        background: linear-gradient(135deg, #2563EB, #06B6D4);
         color: white;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        display: inline-block;
     }
+
     div[data-testid="stRadio"] > div {
         flex-direction: row;
         gap: 8px;
-        background-color: #F1F5F9;
-        padding: 6px;
-        border-radius: 10px;
+        background-color: #38779E;
+        padding: 8px;
+        border-radius: 14px;
+        border: 1px solid #E2E8F0;
         margin-bottom: 20px;
     }
+
     div[data-testid="stRadio"] label {
         background: white;
-        padding: 8px 16px;
-        border-radius: 8px;
-        border: 1px solid #CBD5E1;
+        padding: 10px 18px;
+        border-radius: 12px;
+        border: 1px solid #E2E8F0;
         font-weight: 600;
         cursor: pointer;
+        transition: all 0.2s ease;
     }
-    div[data-testid="stDataFrame"] td, 
-    div[data-testid="stDataFrame"] th, 
+
+    div[data-testid="stRadio"] label:hover {
+        background: #123E62;
+        border-color: #C96A2B;
+        color: #DBEAFE;
+    }
+
+    /* Streamlit buttons */
+    .stButton > button {
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #2563EB, #06B6D4);
+        color: white;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.20);
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.30);
+    }
+
+    /* Empêcher les retours à la ligne dans les cellules de table */
+    div[data-testid="stDataFrame"] {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+    }
+
+    div[data-testid="stDataFrame"] td,
+    div[data-testid="stDataFrame"] th,
     div[data-testid="stDataFrame"] [role="gridcell"] {
         white-space: nowrap !important;
         text-overflow: ellipsis;
@@ -211,7 +275,7 @@ def consolidate_locally(df_submissions):
     return df_res
 
 # -----------------------------------------------------------------------------
-# Fonctions d'Exportation (Excel & PDF avec Matrice Visuelle)
+# Fonctions d'Exportation (Excel & PDF avec Matrice Visuelle Harmonisées)
 # -----------------------------------------------------------------------------
 def generate_excel_export(cfg, df_final, df_raw):
     output = io.BytesIO()
@@ -352,29 +416,29 @@ def generate_pdf_export(cfg, df_final):
         pdf.set_x(10)
         pdf.set_font('Helvetica', 'B', 8)
         pdf.set_text_color(71, 85, 105)
-        pdf.cell(22, cell_h, clean_txt(f"Prob. {p}"), align='R')
+        # Harmonisé : "Probabilité"
+        pdf.cell(22, cell_h, clean_txt(f"Probabilité {p}"), align='R')
         
         for i in range(1, max_i + 1):
             ratio = (p * i) / max_crit
+            # Couleurs identiques à la version Plotly
             if ratio >= 0.65:
-                pdf.set_fill_color(254, 202, 202)
-                pdf.set_text_color(153, 27, 27)
+                pdf.set_fill_color(254, 202, 202) # Rouge
             elif ratio >= 0.40:
-                pdf.set_fill_color(254, 215, 170)
-                pdf.set_text_color(154, 52, 18)
+                pdf.set_fill_color(254, 215, 170) # Orange
             elif ratio >= 0.20:
-                pdf.set_fill_color(254, 240, 138)
-                pdf.set_text_color(133, 77, 14)
+                pdf.set_fill_color(254, 240, 138) # Jaune
             else:
-                pdf.set_fill_color(187, 247, 208)
-                pdf.set_text_color(22, 101, 52)
+                pdf.set_fill_color(187, 247, 208) # Vert
 
+            pdf.set_text_color(30, 41, 59) # Noir/Gris foncé unifié
+            
             cell_x = start_x + (i - 1) * cell_w
             pdf.rect(cell_x, cur_y, cell_w, cell_h, 'DF')
             
             pdf.set_xy(cell_x, cur_y + 1)
             pdf.set_font('Helvetica', 'B', 7)
-            pdf.cell(cell_w, 4, str(p * i), align='C')
+            pdf.cell(cell_w, 4, f"Score {p * i}", align='C')
             
             codes_in_cell = ", ".join(grid_risks.get((p, i), []))
             if codes_in_cell:
@@ -1194,10 +1258,26 @@ else:
 
             with col_mat_plot:
                 st.markdown(f"##### 🎯 Heatmap de Criticité ({max_p}x{max_i})")
+                
+                # Génération des couleurs harmonisées pour Plotly
                 matrix_scores = np.zeros((max_p, max_i), dtype=int)
+                matrix_colors = np.zeros((max_p, max_i), dtype=int)
+                
                 for p in range(1, max_p + 1):
                     for i in range(1, max_i + 1):
-                        matrix_scores[p-1, i-1] = p * i
+                        score = p * i
+                        matrix_scores[p-1, i-1] = score
+                        ratio = score / max_crit
+                        
+                        # Attribution d'une catégorie (1=Vert, 2=Jaune, 3=Orange, 4=Rouge)
+                        if ratio >= 0.65:
+                            matrix_colors[p-1, i-1] = 4
+                        elif ratio >= 0.40:
+                            matrix_colors[p-1, i-1] = 3
+                        elif ratio >= 0.20:
+                            matrix_colors[p-1, i-1] = 2
+                        else:
+                            matrix_colors[p-1, i-1] = 1
 
                 text_matrix = [["" for _ in range(max_i)] for _ in range(max_p)]
                 for idx, row in df_final.iterrows():
@@ -1213,16 +1293,25 @@ else:
                                 text_matrix[p-1][i-1] += f", {risk_label}"
                     except:
                         pass
+                        
+                # Définition de l'échelle de couleurs Plotly calquée sur celle du PDF
+                custom_colorscale = [
+                    [0.0, '#BBF7D0'], [0.25, '#BBF7D0'], # 1 = Vert
+                    [0.25, '#FEF08A'], [0.50, '#FEF08A'], # 2 = Jaune
+                    [0.50, '#FED7AA'], [0.75, '#FED7AA'], # 3 = Orange
+                    [0.75, '#FECACA'], [1.00, '#FECACA']  # 4 = Rouge
+                ]
 
                 fig = go.Figure(data=go.Heatmap(
-                    z=matrix_scores,
+                    z=matrix_colors,
+                    zmin=1, zmax=4,
                     x=list(range(1, max_i + 1)),
                     y=list(range(1, max_p + 1)),
-                    colorscale="YlOrRd",
+                    colorscale=custom_colorscale,
                     showscale=False,
                     text=[[f"<b>Score {matrix_scores[r, c]}</b><br>{text_matrix[r][c]}" for c in range(max_i)] for r in range(max_p)],
                     texttemplate="%{text}",
-                    textfont={"size": 11, "color": "black"}
+                    textfont={"size": 11, "color": "#1E293B"} # Texte unifié gris foncé
                 ))
                 fig.update_layout(
                     xaxis_title="IMPACT", yaxis_title="PROBABILITÉ",
